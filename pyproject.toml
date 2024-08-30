@@ -1,0 +1,22 @@
+[project]
+name = "web_dnd_Michael_Wood"
+version = "1.0.0"
+authors = [
+  { name="Michael Wood", email="d93815c@gmail.com" },
+]
+description = "Python application with uses NiceGUI to provide a D&D 5E encyclopedia"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/m-theDM/DnD"
+Issues = "N/A"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
