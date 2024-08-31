@@ -64,7 +64,6 @@ def main(_xml):
     with footer:
         source.text = statblock['source']
     footer.update()
-    src_button.update()
 
 
 def get_attribute(_tree, _attr):
