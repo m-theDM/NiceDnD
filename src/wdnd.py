@@ -1,29 +1,31 @@
 #!/usr/bin/env python3
-from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod
-from libwdnd import select_dir, xml_split, choose_xml
-from libwdnd import action_data, trait_data, legend_data
+from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
+    read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
+    action_data, trait_data, legend_data
 from nicegui import ui
 import xml.etree.ElementTree as ET
+import os
 
 catalog = 'catalog.txt'
-statblock = {}
-actions={}
-traits={}
-legend={}
 field_list = ['name', 'size', 'type', 'alignment', 'ac', 'hp', 'speed', 'save',\
               'skill', 'resist', 'vulnerable', 'immune', 'conditionImmune', \
               'senses', 'passive', 'languages', 'cr', 'environment', 'str', \
               'dex', 'con', 'wis', 'int', 'cha']
+statblock = {}
+actions = {}
+traits = {}
+legend = {}
 
-
-with open(catalog) as f:
-    contents = f.read().splitlines()
+if not os.path.isfile(catalog):
+    print("No catalog file found.")
+    src_xml_tree = choose_xml()
+    create_xml_dirs(src_xml_tree)
+else:
+    contents = read_catalog(catalog)
 
 
 def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
-    if _xml == None:
-        print("NoneType DETECTED!")
-    
+
     # clear trait, action, and legend dictionaries
     _t_dict.clear()
     _a_dict.clear()
@@ -228,7 +230,7 @@ with ui.footer(value=False) as footer:
     source = ui.label('N/A')
     source.tailwind.font_size('lg')
 
-with ui.left_drawer().classes('bg-blue-100').props('width=400') as left_drawer:
+with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
     select = ui.select(label='Enter Monster Name',
                        options=contents,
                        with_input=True,
@@ -240,10 +242,11 @@ with ui.left_drawer().classes('bg-blue-100').props('width=400') as left_drawer:
                                                         field_list
                                                     ),
                        clearable=True,
-                       ).classes('w-80')
+                       ).classes('w-96')
+    select.tailwind.font_size('lg')
     demog = ui.label("size, type, alignment, (environment)")
     demog.tailwind.font_style('italic')
-    ui.separator()
+    ui.separator().style('width: 90%')
     with ui.grid(columns=('auto auto auto auto auto auto')).classes() as stat_grid:
             ui.label('STR').tailwind.font_weight('extrabold').text_decoration('underline')
             ui.label('DEX').tailwind.font_weight('extrabold').text_decoration('underline')
@@ -263,7 +266,7 @@ with ui.left_drawer().classes('bg-blue-100').props('width=400') as left_drawer:
             wis_value.tailwind.align_items('center')
             cha_value = ui.label('-')
             cha_value.tailwind.align_items('center')
-    ui.separator()
+    ui.separator().style('width: 90%')
     with ui.grid(columns='auto auto').classes() as info_grid:
             ui.label('Armor Class: ').tailwind.font_weight('extrabold')
             armor_class = ui.label('')
@@ -309,11 +312,11 @@ with ui.page_sticky(position='bottom-right', x_offset=20, y_offset=20):
         ui.tooltip('Source').classes('bg-green').tailwind.font_size('lg')
 
 with ui.tab_panels(tabs, value='Traits').classes('w-full'):
-    with ui.tab_panel('Traits') as t_panel:
+    with ui.tab_panel('Traits').style('width: 90%') as t_panel:
         trait_data(traits)
-    with ui.tab_panel('Actions') as a_panel:
+    with ui.tab_panel('Actions').style('width: 90%') as a_panel:
         action_data(actions)
-    with ui.tab_panel('Legendary') as l_panel:
+    with ui.tab_panel('Legendary').style('width: 90%') as l_panel:
         legend_data(legend)
 
 

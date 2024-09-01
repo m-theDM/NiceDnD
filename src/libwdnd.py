@@ -2,7 +2,11 @@ import xml.etree.ElementTree as ET
 import os
 from nicegui import ui
 
-#def set_defaults(_dict):
+def read_catalog(_cat):
+    with open(_cat) as f:
+        _c = f.read().splitlines()
+        return(_c)
+
 
 def get_attribute(_tree, _attr, _dict):
     try:
@@ -220,7 +224,7 @@ def get_stat_mod(_stat):
 @ui.refreshable
 def action_data(_dict) -> None:
     for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold')
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
         for _y in _dict[_x]:
             ui.label(_dict[_x][_y])
 
@@ -228,7 +232,7 @@ def action_data(_dict) -> None:
 @ui.refreshable
 def trait_data(_dict) -> None:
     for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold')
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
         for _y in _dict[_x]:
             ui.label(_dict[_x][_y])
 
@@ -236,7 +240,7 @@ def trait_data(_dict) -> None:
 @ui.refreshable
 def legend_data(_dict) -> None:
     for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold')
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
         for _y in _dict[_x]:
             ui.label(_dict[_x][_y])
 
@@ -288,8 +292,11 @@ def choose_xml():
             print(file_idx, " ", x)
             file_idx += 1
 
+    if file_idx < 1:
+        print("No XML file found.")
+        exit()
+
     if file_idx == 1:
-        #print("Found ", file_dict.get(int(source_xml)).rstrip(), " in the current directory.")
         print("Found ", file_dict[0].rstrip(), " in the current directory.")
         source_xml = file_dict[0]
     else:
@@ -298,3 +305,13 @@ def choose_xml():
 
     #xml_file = file_dict[0].rstrip()
     Tree = ET.parse(source_xml)
+    return(Tree)
+
+
+def create_xml_dirs(_tree):
+    _cats = ["monster","item","class","race","spell","background","feat"]
+
+    for _c in _cats:
+        _dir = select_dir(_c)
+        xml_split(_c, _tree, _dir)
+        
