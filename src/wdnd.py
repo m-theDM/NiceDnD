@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from libwdnd import create_xml_tree, read_xml, get_block
+from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod
 from libwdnd import select_dir, xml_split, choose_xml
 from libwdnd import action_data, trait_data, legend_data
 from nicegui import ui
@@ -42,12 +42,12 @@ def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
     with left_drawer:
         demog.text = (f"{_s_dict['size']}, {_s_dict['type']}, {_s_dict['alignment']}, ({_s_dict['environment']})")
         with stat_grid:
-            str_value.text = _s_dict['str']
-            dex_value.text = _s_dict['dex']
-            con_value.text = _s_dict['con']
-            int_value.text = _s_dict['int']
-            wis_value.text = _s_dict['wis']
-            cha_value.text = _s_dict['cha']
+            str_value.text = _s_dict['str'],get_stat_mod(_s_dict['str'])
+            dex_value.text = _s_dict['dex'],get_stat_mod(_s_dict['dex'])
+            con_value.text = _s_dict['con'],get_stat_mod(_s_dict['con'])
+            int_value.text = _s_dict['int'],get_stat_mod(_s_dict['int'])
+            wis_value.text = _s_dict['wis'],get_stat_mod(_s_dict['wis'])
+            cha_value.text = _s_dict['cha'],get_stat_mod(_s_dict['cha'])
         stat_grid.update()
         with info_grid:
             armor_class.text = _s_dict['ac']
@@ -243,19 +243,26 @@ with ui.left_drawer().classes('bg-blue-100').props('width=400') as left_drawer:
                        ).classes('w-80')
     demog = ui.label("size, type, alignment, (environment)")
     demog.tailwind.font_style('italic')
+    ui.separator()
     with ui.grid(columns=('auto auto auto auto auto auto')).classes() as stat_grid:
-            ui.label('STR').tailwind.font_weight('extrabold')
-            ui.label('DEX').tailwind.font_weight('extrabold')
-            ui.label('CON').tailwind.font_weight('extrabold')
-            ui.label('INT').tailwind.font_weight('extrabold')
-            ui.label('WIS').tailwind.font_weight('extrabold')
-            ui.label('CHA').tailwind.font_weight('extrabold')
+            ui.label('STR').tailwind.font_weight('extrabold').text_decoration('underline')
+            ui.label('DEX').tailwind.font_weight('extrabold').text_decoration('underline')
+            ui.label('CON').tailwind.font_weight('extrabold').text_decoration('underline')
+            ui.label('INT').tailwind.font_weight('extrabold').text_decoration('underline')
+            ui.label('WIS').tailwind.font_weight('extrabold').text_decoration('underline')
+            ui.label('CHA').tailwind.font_weight('extrabold').text_decoration('underline')
             str_value = ui.label('-')
+            str_value.tailwind.align_content('center')
             dex_value = ui.label('-')
+            dex_value.tailwind.align_items('center')
             con_value = ui.label('-')
+            con_value.tailwind.align_items('center')
             int_value = ui.label('-')
+            int_value.tailwind.align_items('center')
             wis_value = ui.label('-')
+            wis_value.tailwind.align_items('center')
             cha_value = ui.label('-')
+            cha_value.tailwind.align_items('center')
     ui.separator()
     with ui.grid(columns='auto auto').classes() as info_grid:
             ui.label('Armor Class: ').tailwind.font_weight('extrabold')

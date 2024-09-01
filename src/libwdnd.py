@@ -75,6 +75,7 @@ def get_block(_tree, _dict, _attr):
 #    print(str(len(actions)) + " actions")
     print(_dict)
 
+'''
 def get_action(_tree, _dict):
     for _e in _tree.findall('action'):
         _e_name = _e.find('name').text
@@ -127,7 +128,6 @@ def get_legend(_tree, _dict):
 #    print(str(len(legend)) + " legendary actions")
    # print(_dict)
 
-'''
 def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
     _t_dict.clear()
     _a_dict.clear()
@@ -177,6 +177,45 @@ def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
         source.text = _s_dict['source']
     footer.update()
 '''
+
+def get_stat_mod(_stat):
+    if _stat == "1":
+        _stat_mod = "(-5)"
+    elif _stat == "2" or _stat == "3":
+        _stat_mod = "(-4)"
+    elif _stat == "4" or _stat == "5":
+        _stat_mod = "(-3)"
+    elif _stat == "6" or _stat == "7":
+        _stat_mod = "(-2)"
+    elif _stat == "8" or _stat == "9":
+        _stat_mod = "(-1)"
+    elif _stat == "10" or _stat == "11":
+        _stat_mod = "(+0)"
+    elif _stat == "12" or _stat == "13":
+        _stat_mod = "(+1)"
+    elif _stat == "14" or _stat == "15":
+        _stat_mod = "(+2)"
+    elif _stat == "16" or _stat == "17":
+        _stat_mod = "(+3)"
+    elif _stat == "18" or _stat == "19":
+        _stat_mod = "(+4)"
+    elif _stat == "20" or _stat == "21":
+        _stat_mod = "(+5)"
+    elif _stat == "22" or _stat == "23":
+        _stat_mod = "(+6)"
+    elif _stat == "24" or _stat == "25":
+         _stat_mod = "(+7)"
+    elif _stat == "26" or _stat == "27":
+         _stat_mod = "(+8)"
+    elif _stat == "28" or _stat == "29":
+        _stat_mod = "(+9)"
+    elif _stat == "30":
+        _stat_mod = "(+10)"    
+    else:
+        _stat_mod = "(X)"
+
+    return _stat_mod
+
 
 @ui.refreshable
 def action_data(_dict) -> None:
