@@ -2,18 +2,19 @@ import xml.etree.ElementTree as ET
 import os
 from nicegui import ui
 
+#def set_defaults(_dict):
+
 def get_attribute(_tree, _attr, _dict):
     try:
         _value = _tree.find(_attr).text
-        if _value == None:
-            _value = 'none'
 
         if _attr == 'size':
             _dict[_attr] = convert_size(_value)
         else:
             _dict[_attr] = _value
-        #print(_attr + " : " + _dict[_attr])
+        print(_attr + " : " + _dict[_attr])
     except:
+        _dict[_attr] = 'N/A'
         print("Failed to find " + _attr + ".")
 
 
@@ -54,6 +55,25 @@ def get_source(_tree, _type, _dict):
             _elemtext = _elem.find('text').text
             _dict['source'] = _elemtext
 
+
+def get_block(_tree, _dict, _attr):
+    for _e in _tree.findall(_attr):
+        _e_name = _e.find('name').text
+        if _attr == 'trait' and _e_name == 'Source':
+            continue
+
+        _dict[_e_name] = {}
+
+        _idx = 0
+        for _t in _e.findall('text'):
+            if _t.text == None:
+                continue
+#            print(_t.text)
+            _dict[_e_name][_idx] = _t.text
+            _idx += 1
+
+#    print(str(len(actions)) + " actions")
+    print(_dict)
 
 def get_action(_tree, _dict):
     for _e in _tree.findall('action'):

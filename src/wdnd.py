@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from libwdnd import create_xml_tree, read_xml, get_action, get_legend, get_trait
+from libwdnd import create_xml_tree, read_xml, get_block
 from libwdnd import select_dir, xml_split, choose_xml
 from libwdnd import action_data, trait_data, legend_data
 from nicegui import ui
@@ -21,16 +21,24 @@ with open(catalog) as f:
 
 
 def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
+    if _xml == None:
+        print("NoneType DETECTED!")
+    
+    # clear trait, action, and legend dictionaries
     _t_dict.clear()
     _a_dict.clear()
     _l_dict.clear()
+
+    # read the monster xml file into an Elementree tree
     _xml_dat = create_xml_tree(_xml.rstrip())
+
     # Added dictionaries to the next 4 lines.  hah
     read_xml(_xml_dat, _f_list, _s_dict)
-    get_action(_xml_dat, _a_dict)
-    get_trait(_xml_dat, _t_dict)
-    get_legend(_xml_dat, _l_dict)
-#    l_panel.update()
+    get_block(_xml_dat, _a_dict, 'action')
+    get_block(_xml_dat, _t_dict, 'trait')
+    get_block(_xml_dat, _l_dict, 'legendary')
+
+    # display statblock data in left.drawer
     with left_drawer:
         demog.text = (f"{_s_dict['size']}, {_s_dict['type']}, {_s_dict['alignment']}, ({_s_dict['environment']})")
         with stat_grid:
@@ -56,18 +64,27 @@ def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
             challenge.text = _s_dict['cr']
             pass_perc.text = _s_dict['passive']
         info_grid.update()
+    
+    # clear the trait panel and refill it with new data
     with t_panel:
         t_panel.clear()
         trait_data(_t_dict)
+
+    # clear the action panel and refill it with new data
     with a_panel:
         a_panel.clear()
         action_data(_a_dict)
+    
+    # clear the legendary action panel and refill it with new data
     with l_panel:
         l_panel.clear()
         legend_data(_l_dict)
+    
+    # refresh the footer with source information
     with footer:
         source.text = _s_dict['source']
     footer.update()
+
 '''
 def get_attribute(_tree, _attr):
     try:
