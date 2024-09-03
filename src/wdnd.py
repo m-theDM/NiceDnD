@@ -24,7 +24,7 @@ else:
     contents = read_catalog(catalog)
 
 
-def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
+def select_monster(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
 
     # clear trait, action, and legend dictionaries
     _t_dict.clear()
@@ -234,7 +234,7 @@ with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
     select = ui.select(label='Enter Monster Name',
                        options=contents,
                        with_input=True,
-                       on_change=lambda e: on_select(e.value, \
+                       on_change=lambda e: select_monster(e.value, \
                                                      statblock, \
                                                         traits, \
                                                         actions, \
@@ -307,9 +307,11 @@ with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
             ui.label('Passive Perception:').tailwind.font_weight('extrabold')
             pass_perc = ui.label('')
 
+
 with ui.page_sticky(position='bottom-right', x_offset=20, y_offset=20):
     with ui.button(on_click=footer.toggle, icon='contact_support').props('fab'):
         ui.tooltip('Source').classes('bg-green').tailwind.font_size('lg')
+
 
 with ui.tab_panels(tabs, value='Traits').classes('w-full'):
     with ui.tab_panel('Traits').style('width: 90%') as t_panel:
