@@ -219,11 +219,11 @@ def legend_data() -> None:
 
 with ui.header().classes(replace='row items-center') as header:
     ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
-    ui.label('D&D 5E Codex').tailwind.font_size('2xl').font_weight('extrabold')
     with ui.tabs() as tabs:
         ui.tab('Traits')
         ui.tab('Actions')
         ui.tab('Legendary')
+    ui.label('NiceD&D 5E Codex').classes('absolute-bottom-right').tailwind.font_size('2xl').font_weight('extrabold')
 
 with ui.footer(value=False) as footer:
     ui.label('Source:  ').tailwind.font_size('xl').font_weight('extrabold')
