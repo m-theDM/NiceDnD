@@ -7,16 +7,21 @@ import xml.etree.ElementTree as ET
 import os
 
 def monster_tabs(_state) -> None:
-    with ui.tabs() as tabs:
         if _state == 'off':
-            tabs.delete()
+            with tabs:
+                tabs.clear()
         elif _state == 'on':
-            ui.tab('Traits')
-            ui.tab('Actions')
-            ui.tab('Legendary')
+            with tabs:
+                ui.tab('Traits')
+                ui.tab('Actions')
+                ui.tab('Legendary')
+
+def display_panel(_panel):
+        ui.label('_panel')
+        t_panel.update()
+        #trait_data(traits)
 
 def spell_display() -> None:
-    monster_tabs('off')
     ui.label('Spell Stuff').classes('absolute-center').tailwind.font_size('2xl').font_weight('extrabold')
 
 
@@ -24,6 +29,7 @@ def refresh_app(_type) -> None:
     if _type == 'monster':
         monster_tabs('on')
     elif _type == 'spell':
+        monster_tabs('off')
         spell_display()
     
 with ui.header().classes(replace='row items-center') as header:
@@ -42,6 +48,15 @@ with ui.header().classes(replace='row items-center') as header:
                        clearable=True,
                        ).classes('w-96')
     select.tailwind.font_size('lg')
+# Can this be handled via the 'visibility' option?
+    with ui.tabs() as tabs:
+        monster_tabs('off')
     ui.label('NiceD&D 5E Codex').classes('absolute-bottom-right').tailwind.font_size('2xl').font_weight('extrabold')
 
+with ui.tab_panels(tabs, value='Traits').classes('w-full'):
+    with ui.tab_panel('Traits').style('width: 90%') as t_panel:
+        display_panel('traits')
+            # trait_data(traits)
+    # with ui.tab_panels(tabs, value='Traits').classes('w-full'):
+    #     pass
 ui.run()
