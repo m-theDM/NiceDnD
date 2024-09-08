@@ -2,10 +2,75 @@ import xml.etree.ElementTree as ET
 import os
 from nicegui import ui
 
+### Catalog Functions
+
 def read_catalog(_cat):
     with open(_cat) as f:
         _c = f.read().splitlines()
         return(_c)
+
+
+def xml_split(_node, _tree, _dir):
+#    node = _node
+    root = _tree.getroot()
+
+    for item in root.findall(_node):
+        _name = item.find('name').text
+        _name = _name.replace("/", "-")
+#        print(_node," --> ",_dir," --> ",_name)
+        if not os.path.exists(_dir):
+            os.makedirs(_dir)
+        with open(_dir + '/' + _name + '.xml', 'wb') as f:
+            ET.ElementTree(item).write(f)
+#        with open('catalog.txt', 'wb') as c:
+        catalog = open("catalog.txt", "a")
+        catalog.write(_dir + '/' + _name + ".xml\n")
+        catalog.close
+
+
+def choose_xml():
+    file_idx = 0
+    file_dict = {}
+    for x in os.listdir():
+        if x.endswith(".xml"):
+            # Prints only text file present in My Folder
+            file_dict[file_idx] = x
+            print(file_idx, " ", x)
+            file_idx += 1
+
+    if file_idx < 1:
+        print("No XML file found.")
+        exit()
+
+    if file_idx == 1:
+        print("Found ", file_dict[0].rstrip(), " in the current directory.")
+        source_xml = file_dict[0]
+    else:
+        select_xml = input("Select the number of the source XML file:  ")
+        source_xml = file_dict[select_xml]
+
+    #xml_file = file_dict[0].rstrip()
+    Tree = ET.parse(source_xml)
+    return(Tree)
+
+
+def create_xml_dirs(_tree):
+    _cats = ["monster","item","class","race","spell","background","feat"]
+
+    for _c in _cats:
+        _dir = select_dir(_c)
+        xml_split(_c, _tree, _dir)
+
+
+### Individual XML File Functions
+
+def create_xml_tree(_data_file):
+    try:
+        _data_file = _data_file#.rstrip()
+        _tree = ET.parse(_data_file)
+        return _tree
+    except:
+        print(f"Error with {_data_file}: XML data file not found.")
 
 
 def get_attribute(_tree, _attr, _dict):
@@ -20,15 +85,6 @@ def get_attribute(_tree, _attr, _dict):
     except:
         _dict[_attr] = 'N/A'
         print("Failed to find " + _attr + ".")
-
-
-def create_xml_tree(_data_file):
-    try:
-        _data_file = _data_file#.rstrip()
-        _tree = ET.parse(_data_file)
-        return _tree
-    except:
-        print(f"Error with {_data_file}: XML data file not found.")
 
 
 def read_xml(_tree, _list, _dict):
@@ -78,6 +134,144 @@ def get_block(_tree, _dict, _attr):
 
 #    print(str(len(actions)) + " actions")
     print(_dict)
+
+
+
+def get_stat_mod(_stat):
+    if _stat == "1":
+        _stat_mod = "(-5)"
+    elif _stat == "2" or _stat == "3":
+        _stat_mod = "(-4)"
+    elif _stat == "4" or _stat == "5":
+        _stat_mod = "(-3)"
+    elif _stat == "6" or _stat == "7":
+        _stat_mod = "(-2)"
+    elif _stat == "8" or _stat == "9":
+        _stat_mod = "(-1)"
+    elif _stat == "10" or _stat == "11":
+        _stat_mod = "(+0)"
+    elif _stat == "12" or _stat == "13":
+        _stat_mod = "(+1)"
+    elif _stat == "14" or _stat == "15":
+        _stat_mod = "(+2)"
+    elif _stat == "16" or _stat == "17":
+        _stat_mod = "(+3)"
+    elif _stat == "18" or _stat == "19":
+        _stat_mod = "(+4)"
+    elif _stat == "20" or _stat == "21":
+        _stat_mod = "(+5)"
+    elif _stat == "22" or _stat == "23":
+        _stat_mod = "(+6)"
+    elif _stat == "24" or _stat == "25":
+         _stat_mod = "(+7)"
+    elif _stat == "26" or _stat == "27":
+         _stat_mod = "(+8)"
+    elif _stat == "28" or _stat == "29":
+        _stat_mod = "(+9)"
+    elif _stat == "30":
+        _stat_mod = "(+10)"    
+    else:
+        _stat_mod = "(X)"
+
+    return _stat_mod
+
+
+@ui.refreshable
+def action_data(_dict) -> None:
+    for _x in _dict:
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+        for _y in _dict[_x]:
+            ui.label(_dict[_x][_y])
+
+
+@ui.refreshable
+def trait_data(_dict) -> None:
+    for _x in _dict:
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+        for _y in _dict[_x]:
+            ui.label(_dict[_x][_y])
+
+
+@ui.refreshable
+def legend_data(_dict) -> None:
+    for _x in _dict:
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+        for _y in _dict[_x]:
+            ui.label(_dict[_x][_y])
+
+
+def select_dir(_node):
+    if _node == "monster":
+        _dir = "Monsters"
+    elif _node == "item":
+        _dir = "Items"
+    elif _node == "class":
+        _dir = "Classes"
+    elif _node == "race":
+        _dir = "Races"
+    elif _node == "spell":
+        _dir = "Spells"
+    elif _node == "background":
+        _dir = "Backgrounds"
+    elif _node == "feat":
+        _dir = "Feats"
+
+    return _dir
+
+
+
+
+### Spell Functions
+
+def convert_school():
+    _schoolname = {
+        "A": "abjuration",
+        "C": "conjuration",
+        "D": "divination",
+        "EN": "enchantment",
+        "EV": "evocation",
+        "I": "illusion",
+        "N": "necromancy",
+        "T": "transmutation"
+    }
+    try:
+        _school = spellblock['school']
+        spellblock['school'] = _schoolname[_school]
+    except:
+        print("Error matching school name")
+        
+def convert_level():
+    _lvl_dict = {
+        "0": "cantrip",
+        "1": "1st level",
+        "2": "2nd level",
+        "3": "3rd level",
+        "4": "4th level",
+        "5": "5th level",
+        "6": "6th level",
+        "7": "7th level",
+        "8": "8th level",
+        "9": "9th level"
+    } 
+    try:
+        _lvl = spellblock['level']
+        spellblock['level'] = _lvl_dict[_lvl]
+    except:
+        print("Error matching level")
+
+
+def convert_ritual():
+    try:
+        _r = spellblock['ritual']
+        if _r == "NO":
+            spellblock['ritual'] = ""
+        else:
+            spellblock['ritual'] = "(ritual)"
+    except:
+        print("Failed to convert ritual.")
+
+
+
 
 '''
 def get_action(_tree, _dict):
@@ -181,137 +375,4 @@ def on_select(_xml, _s_dict, _t_dict, _a_dict, _l_dict, _f_list):
         source.text = _s_dict['source']
     footer.update()
 '''
-
-def get_stat_mod(_stat):
-    if _stat == "1":
-        _stat_mod = "(-5)"
-    elif _stat == "2" or _stat == "3":
-        _stat_mod = "(-4)"
-    elif _stat == "4" or _stat == "5":
-        _stat_mod = "(-3)"
-    elif _stat == "6" or _stat == "7":
-        _stat_mod = "(-2)"
-    elif _stat == "8" or _stat == "9":
-        _stat_mod = "(-1)"
-    elif _stat == "10" or _stat == "11":
-        _stat_mod = "(+0)"
-    elif _stat == "12" or _stat == "13":
-        _stat_mod = "(+1)"
-    elif _stat == "14" or _stat == "15":
-        _stat_mod = "(+2)"
-    elif _stat == "16" or _stat == "17":
-        _stat_mod = "(+3)"
-    elif _stat == "18" or _stat == "19":
-        _stat_mod = "(+4)"
-    elif _stat == "20" or _stat == "21":
-        _stat_mod = "(+5)"
-    elif _stat == "22" or _stat == "23":
-        _stat_mod = "(+6)"
-    elif _stat == "24" or _stat == "25":
-         _stat_mod = "(+7)"
-    elif _stat == "26" or _stat == "27":
-         _stat_mod = "(+8)"
-    elif _stat == "28" or _stat == "29":
-        _stat_mod = "(+9)"
-    elif _stat == "30":
-        _stat_mod = "(+10)"    
-    else:
-        _stat_mod = "(X)"
-
-    return _stat_mod
-
-
-@ui.refreshable
-def action_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
-
-
-@ui.refreshable
-def trait_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
-
-
-@ui.refreshable
-def legend_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
-
-
-def select_dir(_node):
-    if _node == "monster":
-        _dir = "Monsters"
-    elif _node == "item":
-        _dir = "Items"
-    elif _node == "class":
-        _dir = "Classes"
-    elif _node == "race":
-        _dir = "Races"
-    elif _node == "spell":
-        _dir = "Spells"
-    elif _node == "background":
-        _dir = "Backgrounds"
-    elif _node == "feat":
-        _dir = "Feats"
-
-    return _dir
-
-
-def xml_split(_node, _tree, _dir):
-#    node = _node
-    root = _tree.getroot()
-
-    for item in root.findall(_node):
-        _name = item.find('name').text
-        _name = _name.replace("/", "-")
-#        print(_node," --> ",_dir," --> ",_name)
-        if not os.path.exists(_dir):
-            os.makedirs(_dir)
-        with open(_dir + '/' + _name + '.xml', 'wb') as f:
-            ET.ElementTree(item).write(f)
-#        with open('catalog.txt', 'wb') as c:
-        catalog = open("catalog.txt", "a")
-        catalog.write(_dir + '/' + _name + ".xml\n")
-        catalog.close
-
-
-def choose_xml():
-    file_idx = 0
-    file_dict = {}
-    for x in os.listdir():
-        if x.endswith(".xml"):
-            # Prints only text file present in My Folder
-            file_dict[file_idx] = x
-            print(file_idx, " ", x)
-            file_idx += 1
-
-    if file_idx < 1:
-        print("No XML file found.")
-        exit()
-
-    if file_idx == 1:
-        print("Found ", file_dict[0].rstrip(), " in the current directory.")
-        source_xml = file_dict[0]
-    else:
-        select_xml = input("Select the number of the source XML file:  ")
-        source_xml = file_dict[select_xml]
-
-    #xml_file = file_dict[0].rstrip()
-    Tree = ET.parse(source_xml)
-    return(Tree)
-
-
-def create_xml_dirs(_tree):
-    _cats = ["monster","item","class","race","spell","background","feat"]
-
-    for _c in _cats:
-        _dir = select_dir(_c)
-        xml_split(_c, _tree, _dir)
         
