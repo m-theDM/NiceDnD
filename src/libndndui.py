@@ -158,11 +158,11 @@ def display_spell_cards(_xml) -> None:
     _field_list = ['name', 'school', 'level', 'ritual', 'time', 'range', \
                    'components', 'duration', 'classes', 'roll']
     _statblock = {}
-    _spellblock = {}
+    _text_block = {}
 
     # read the monster xml file into an Elementree tree
     _xml_dat = create_xml_tree(_xml.rstrip())
-    get_spell_block(_xml_dat, _spellblock, 'text')
+    get_spell_block(_xml_dat, _text_block, 'text')
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
@@ -186,7 +186,7 @@ def display_spell_cards(_xml) -> None:
             ui.label('Duration: ').tailwind.font_weight('extrabold')
             _spell_time = ui.label(_statblock['time'])
         ui.separator().style('width: 100%')
-        display_spell_block(_spellblock)
+        display_spell_block(_text_block)
         ui.separator().style('width: 100%')
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Allowed Classes: ').tailwind.font_weight('extrabold')
@@ -202,10 +202,10 @@ def display_item_cards(_xml) -> None:
                    'magic', 'name', 'property', 'range', 'roll', 'stealth', \
                     'strength', 'text', 'type', 'value', 'weight',]
     _statblock = {}
-    _itemblock = {}
+    _text_block = {}
 
     _xml_dat = create_xml_tree(_xml.rstrip())
-    get_spell_block(_xml_dat, _itemblock, 'text')
+    get_spell_block(_xml_dat, _text_block, 'text')
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
@@ -241,20 +241,49 @@ def display_item_cards(_xml) -> None:
                     _dmg.text = (f"Two-handed: {_statblock['dmg2']}")
 
         ui.separator().style('width: 100%')
-        display_spell_block(_itemblock)
+        display_spell_block(_text_block)
         ui.separator().style('width: 100%')
 
 @ui.refreshable
 def display_race_cards(_xml) -> None:
+    _field_list = ['ability', 'name', 'proficiency', 'size', \
+                   'special', 'speed', 'spellAbility', 'text', 'trait']
+    
+    _statblock = {}
+    _block = {}
+
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    get_spell_block(_xml_dat, _block, 'ext')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
+
     with ui.card().style('width: 400px') as spell_card:
         _name = ui.label('Race')
         _name.tailwind.font_size('2xl').font_weight('bold')
 
 @ui.refreshable
 def display_background_cards(_xml) -> None:
-    with ui.card().style('width: 400px') as spell_card:
-        _name = ui.label('Background')
+    _field_list = ['name', 'proficiency', 'trait']
+
+    _statblock = {}
+    _text_block = {}
+
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    get_block(_xml_dat, _text_block, 'trait')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
+    
+    with ui.card().style('width: 600px') as bkgd_card:
+        _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Proficiency ').tailwind.font_weight('extrabold')
+            _bkgd_prof = ui.label(_statblock['proficiency'])
+        ui.separator().style('width: 100%')
+        display_block(_text_block)
+        ui.separator().style('width: 100%')
 
 @ui.refreshable
 def display_class_cards(_xml) -> None:
@@ -264,9 +293,23 @@ def display_class_cards(_xml) -> None:
 
 @ui.refreshable
 def display_feat_cards(_xml) -> None:
-    with ui.card().style('width: 400px') as spell_card:
-        _name = ui.label('Feat')
+    _field_list = ['name', 'prerequisite', 'proficiency', 'text']
+
+    _statblock = {}
+    _text_block = {}
+
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    get_spell_block(_xml_dat, _text_block, 'text')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
+
+    with ui.card().style('width: 600px') as spell_card:
+        _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
+        ui.separator().style('width: 100%')
+        display_spell_block(_text_block)
+        ui.separator().style('width: 100%')
 
 @ui.refreshable
 def populate_left_drawer(_selector, _drawer, _row, _contents) -> None:
