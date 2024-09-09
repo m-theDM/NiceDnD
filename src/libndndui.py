@@ -250,17 +250,23 @@ def display_race_cards(_xml) -> None:
                    'special', 'speed', 'spellAbility', 'text', 'trait']
     
     _statblock = {}
-    _block = {}
+    _text_block = {}
 
     _xml_dat = create_xml_tree(_xml.rstrip())
-    get_spell_block(_xml_dat, _block, 'ext')
+    get_block(_xml_dat, _text_block, 'trait')
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
 
-    with ui.card().style('width: 400px') as spell_card:
-        _name = ui.label('Race')
+    with ui.card().style('width: 600px') as spell_card:
+        _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Proficiency ').tailwind.font_weight('extrabold')
+            _bkgd_prof = ui.label(_statblock['proficiency'])
+        ui.separator().style('width: 100%')
+        display_block(_text_block)
+        ui.separator().style('width: 100%')
 
 @ui.refreshable
 def display_background_cards(_xml) -> None:
@@ -287,7 +293,7 @@ def display_background_cards(_xml) -> None:
 
 @ui.refreshable
 def display_class_cards(_xml) -> None:
-    with ui.card().style('width: 400px') as spell_card:
+    with ui.card().style('width: 600px') as spell_card:
         _name = ui.label('Class')
         _name.tailwind.font_size('2xl').font_weight('bold')
 
