@@ -1,7 +1,21 @@
 from nicegui import ui
 from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
     read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
-    action_data, trait_data, legend_data
+    get_spell_block
+
+@ui.refreshable
+def display_block(_dict) -> None:
+    for _x in _dict:
+        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+        for _y in _dict[_x]:
+            ui.label(_dict[_x][_y])
+
+
+@ui.refreshable
+def display_spell_block(_dict) -> None:
+    for _x in _dict:
+        ui.label(_dict[_x])
+
 
 @ui.refreshable
 def display_monster_cards(_xml) -> None:
@@ -113,21 +127,24 @@ def display_monster_cards(_xml) -> None:
             pass_perc = ui.label(_statblock['passive'])
 
     with ui.card().classes('right').classes('w-full') as trait_card:
-        trait_data(_traits)
+        # trait_data(_traits)
+        display_block(_traits)
     if _traits == {}:
         trait_card.set_visibility(False)
     else:
         trait_card.set_visibility(True)
 
     with ui.card().classes('right').classes('w-full') as action_card:
-        action_data(_actions)
+        # action_data(_actions)
+        display_block(_actions)
     if _actions == {}:
         action_card.set_visibility(False)
     else:
         action_card.set_visibility(True)
 
     with ui.card().classes('right').classes('w-full') as legend_card:
-        legend_data(_legend)
+        # legend_data(_legend)
+        display_block(_legend)
     if _legend == {}:
         legend_card.set_visibility(False)
     else:
@@ -135,48 +152,118 @@ def display_monster_cards(_xml) -> None:
 # end display_monster_card
 
 
+
+@ui.refreshable
 def display_spell_cards(_xml) -> None:
     _field_list = ['name', 'school', 'level', 'ritual', 'time', 'range', \
                    'components', 'duration', 'classes', 'roll']
     _statblock = {}
+    _spellblock = {}
 
-    with ui.card().style('width: 300px') as stat_card:
+    # read the monster xml file into an Elementree tree
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    get_spell_block(_xml_dat, _spellblock, 'text')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
+
+    with ui.card().style('width: 600px') as stat_card:
         _spell_name = ui.label(_statblock['name'])
         _spell_name.tailwind.font_size('2xl').font_weight('bold')
+        _demog = ui.label("school, level, (ritual)")
+        if _statblock['level'] == 'cantrip':
+            _demog.text = (f"{_statblock['school']} {_statblock['level']} ({_statblock['ritual']})")
+        else:
+            _demog.text = (f"{_statblock['level']} {_statblock['school']}, ({_statblock['ritual']})")
+        _demog.tailwind.font_style('italic')
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Range: ').tailwind.font_weight('extrabold')
+            _spell_range = ui.label(_statblock['range'])
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Components: ').tailwind.font_weight('extrabold')
+            _spell_comp = ui.label(_statblock['components'])
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Duration: ').tailwind.font_weight('extrabold')
+            _spell_time = ui.label(_statblock['time'])
+        ui.separator().style('width: 100%')
+        display_spell_block(_spellblock)
+        ui.separator().style('width: 100%')
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Allowed Classes: ').tailwind.font_weight('extrabold')
+            _spell_class = ui.label(_statblock['classes'])
+        # _name = ui.label('Spell')
+        # _name.tailwind.font_size('2xl').font_weight('bold')
 
+@ui.refreshable
+def display_item_cards(_xml) -> None:
+    # _field_list = ['name', 'type', 'magic', 'detail', 'weight', 'ac', \
+                #    'description', 'dmg1', 'dmg2', 'dmgType']
+    _field_list = ['ac', 'detail', 'dmg1', 'dmg2', 'dmgType', 'item', \
+                   'magic', 'name', 'property', 'range', 'roll', 'stealth', \
+                    'strength', 'text', 'type', 'value', 'weight',]
+    _statblock = {}
+    _itemblock = {}
+
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    get_spell_block(_xml_dat, _itemblock, 'text')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
     
-@ui.refreshable
-def display_spell_cards() -> None:
-    with ui.card().style('width: 400px') as spell_card:
-        _name = ui.label('Spell')
+    with ui.card().style('width: 600px') as item_card:
+        _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
+        _demog = ui.label("type, magical, rarity")
+        _demog.text = (f"{_statblock['type']} {_statblock['magic']} ({_statblock['detail']})")
+        _demog.tailwind.font_style('italic')
+        for _i in ('weight', 'ac'):
+            if _statblock[_i] != 'N/A':
+                with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                    _title = ui.label('')
+                    _title.text = (f"{_i.title()}")
+                    _title.tailwind.font_weight('extrabold')
+                    _stat = ui.label(_statblock['weight'])
+        if _statblock['dmg1'] == 'N/A' and _statblock['dmg2'] == N/A:
+                pass
+        else:
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Damage:  ")
+                _title.tailwind.font_weight('extrabold')
+                if _statblock['dmg1'] != 'N/A' and _statblock['dmg2'] != 'N/A':
+                    _dmg = ui.label()
+                    _dmg.text = (f"One-handed: {_statblock['dmg1']} / Two-handed:  {_statblock['dmg2']}")
+                elif _statblock['dmg2'] == 'N/A':
+                    _dmg = ui.label()
+                    _dmg.text = (f"One-handed: {_statblock['dmg1']}")
+                elif _statblock['dmg1'] == 'N/A':
+                    _dmg = ui.label()
+                    _dmg.text = (f"Two-handed: {_statblock['dmg2']}")
+
+        ui.separator().style('width: 100%')
+        display_spell_block(_itemblock)
+        ui.separator().style('width: 100%')
 
 @ui.refreshable
-def display_item_cards() -> None:
-    with ui.card().style('width: 400px') as spell_card:
-        _name = ui.label('Item')
-        _name.tailwind.font_size('2xl').font_weight('bold')
-
-@ui.refreshable
-def display_race_cards() -> None:
+def display_race_cards(_xml) -> None:
     with ui.card().style('width: 400px') as spell_card:
         _name = ui.label('Race')
         _name.tailwind.font_size('2xl').font_weight('bold')
 
 @ui.refreshable
-def display_background_cards() -> None:
+def display_background_cards(_xml) -> None:
     with ui.card().style('width: 400px') as spell_card:
         _name = ui.label('Background')
         _name.tailwind.font_size('2xl').font_weight('bold')
 
 @ui.refreshable
-def display_class_cards() -> None:
+def display_class_cards(_xml) -> None:
     with ui.card().style('width: 400px') as spell_card:
         _name = ui.label('Class')
         _name.tailwind.font_size('2xl').font_weight('bold')
 
 @ui.refreshable
-def display_feat_cards() -> None:
+def display_feat_cards(_xml) -> None:
     with ui.card().style('width: 400px') as spell_card:
         _name = ui.label('Feat')
         _name.tailwind.font_size('2xl').font_weight('bold')
@@ -191,38 +278,39 @@ def populate_left_drawer(_selector, _drawer, _row, _contents) -> None:
                        ).classes('w-96')
     _mselect.tailwind.font_size('lg')
     _sselect = ui.select(label='Spells',
-                       options=['spell'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _sselect.tailwind.font_size('lg')
     _iselect = ui.select(label='Items',
-                       options=['item'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
+    _iselect.tailwind.font_size('lg')
     _cselect = ui.select(label='Classes',
-                       options=['class'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _rselect = ui.select(label='Race',
-                       options=['races'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _bselect = ui.select(label='Backgrounds',
-                       options=['background'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _fselect = ui.select(label='Feats',
-                       options=['feat'],
+                       options=_contents,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,

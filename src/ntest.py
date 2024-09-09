@@ -4,8 +4,8 @@ from libndndui import display_monster_cards, display_background_cards, \
     display_feat_cards, display_item_cards, populate_left_drawer, \
     populate_right_drawer
 from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
-    read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
-    action_data, trait_data, legend_data
+    read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs
+    
 from nicegui import ui
 import xml.etree.ElementTree as ET
 import os
@@ -20,19 +20,21 @@ catalog = 'catalog.txt'
 # actions = {}
 # traits = {}
 # legend = {}
+#
 
 if not os.path.isfile(catalog):
     print("No catalog file found.")
     src_xml_tree = choose_xml()
     create_xml_dirs(src_xml_tree)
-else:
-    contents = read_catalog(catalog)
+
+contents = read_catalog(catalog)
 
 
 def reset_left_drawer(_drawer) -> None:
     # left_drawer.clear()
     with _drawer:
-        populate_left_drawer.refresh(on_select, left_drawer, card_row, contents)
+        # populate_left_drawer.refresh(on_select, left_drawer, card_row, contents)
+        populate_left_drawer.refresh()
 # end reset_left_drawer
 
 
@@ -43,7 +45,6 @@ def show_monster() -> None:
                   ({_s_dict['environment']})"\
                  )
 # end show_monster
-
 
 def on_select(_x, _drawer, _card_row) -> None:
 #    _welcome.set_visibility(False)
@@ -59,22 +60,28 @@ def on_select(_x, _drawer, _card_row) -> None:
             display_monster_cards.refresh()
     elif _y == 'Spells':
         with _card_row:
-            display_spell_cards()
+            display_spell_cards(_x)
+            display_spell_cards.refresh()
     elif _y == 'Items':
         with _card_row:
-            display_item_cards()
+            display_item_cards(_x)
+            display_item_cards.refresh()
     elif _y == 'Races':
         with _card_row:
-            display_race_cards()
+            display_race_cards(_x)
+            display_race_cards.refresh()
     elif _y == 'Backgrounds':
         with _card_row:
-            display_background_cards()
+            display_background_cards(_x)
+            display_background_cards.refresh()
     elif _y == 'Classes':
         with _card_row:
-            display_class_cards()
+            display_class_cards(_x)
+            display_class_cards.refresh()
     elif _y == 'Feats':
         with _card_row:
-            display_feat_cards()
+            display_feat_cards(_x)
+            display_feat_cards.refresh()
     _card_row.update()
     reset_left_drawer(_drawer)
 # end on_select

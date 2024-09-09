@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import os
 from nicegui import ui
+from libndnddat import sizes, schoolname, spelllevels, itemtypes, damagetypes, \
+    properties
 
 ### Catalog Functions
 
@@ -78,7 +80,24 @@ def get_attribute(_tree, _attr, _dict):
         _value = _tree.find(_attr).text
 
         if _attr == 'size':
-            _dict[_attr] = convert_size(_value)
+            _dict[_attr] = convert_data(sizes, _value)
+        elif _attr == 'school':
+            _dict[_attr] = convert_data(schoolname, _value)
+        elif _attr == 'level':
+            _dict[_attr] = convert_data(spelllevels, _value)
+        elif _attr == 'ritual':
+            if _dict[_attr] == 'NO':
+                _dict[_attr] = ''
+            elif _dict[_attr] == 'YES':
+                _dict[_attr] = '(ritual)'
+        elif _attr == 'magic':
+            _dict[_attr] = 'magical'
+        elif _attr == 'type':
+            _dict[_attr] = convert_data(itemtypes, _value)
+        elif _attr == 'dmgType':
+            _dict[_attr] = convert_data(damagetypes, _value)
+        # elif _attr == 'property':
+        #     _dict[_attr] = convert_data(properties, _value)
         else:
             _dict[_attr] = _value
         print(_attr + " : " + _dict[_attr])
@@ -93,17 +112,9 @@ def read_xml(_tree, _list, _dict):
     get_source(_tree, 'trait', _dict)
 
 
-def convert_size(_s):
-    _size_dict = {
-        "T": "tiny",
-        "S": "small",
-        "M": "medium",
-        "L": "large",
-        "H": "huge",
-        "G": "gargantuan"
-    }
+def convert_data(_dict, _s):
     try:
-        return(_size_dict[_s])
+        return(_dict[_s])
     except:
         print("Size not in dictionary.")
 
@@ -176,28 +187,28 @@ def get_stat_mod(_stat):
     return _stat_mod
 
 
-@ui.refreshable
-def action_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
+# @ui.refreshable
+# def action_data(_dict) -> None:
+#     for _x in _dict:
+#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+#         for _y in _dict[_x]:
+#             ui.label(_dict[_x][_y])
 
 
-@ui.refreshable
-def trait_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
+# @ui.refreshable
+# def trait_data(_dict) -> None:
+#     for _x in _dict:
+#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+#         for _y in _dict[_x]:
+#             ui.label(_dict[_x][_y])
 
 
-@ui.refreshable
-def legend_data(_dict) -> None:
-    for _x in _dict:
-        ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-        for _y in _dict[_x]:
-            ui.label(_dict[_x][_y])
+# @ui.refreshable
+# def legend_data(_dict) -> None:
+#     for _x in _dict:
+#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
+#         for _y in _dict[_x]:
+#             ui.label(_dict[_x][_y])
 
 
 def select_dir(_node):
@@ -223,53 +234,48 @@ def select_dir(_node):
 
 ### Spell Functions
 
-def convert_school():
-    _schoolname = {
-        "A": "abjuration",
-        "C": "conjuration",
-        "D": "divination",
-        "EN": "enchantment",
-        "EV": "evocation",
-        "I": "illusion",
-        "N": "necromancy",
-        "T": "transmutation"
-    }
-    try:
-        _school = spellblock['school']
-        spellblock['school'] = _schoolname[_school]
-    except:
-        print("Error matching school name")
-        
-def convert_level():
-    _lvl_dict = {
-        "0": "cantrip",
-        "1": "1st level",
-        "2": "2nd level",
-        "3": "3rd level",
-        "4": "4th level",
-        "5": "5th level",
-        "6": "6th level",
-        "7": "7th level",
-        "8": "8th level",
-        "9": "9th level"
-    } 
-    try:
-        _lvl = spellblock['level']
-        spellblock['level'] = _lvl_dict[_lvl]
-    except:
-        print("Error matching level")
+def get_spell_block(_tree, _dict, _attr):
+    _idx = 0
+    for _e in _tree.findall(_attr):
+        _dict[_idx] = _e.text
+        _idx += 1
 
 
-def convert_ritual():
-    try:
-        _r = spellblock['ritual']
-        if _r == "NO":
-            spellblock['ritual'] = ""
-        else:
-            spellblock['ritual'] = "(ritual)"
-    except:
-        print("Failed to convert ritual.")
+### Item Functions
 
+def get_item_block(_tree, _dict, _attr):
+    _idx = 0
+    for _e in _tree.findall(_attr):
+        _dict[_idx] = _e.text
+        _idx += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # _e_name = _e.find('name').text
+        # if _attr == 'trait' and _e_name == 'Source':
+        #     continue
+
+        # _dict[_e_name] = {}
+
+        # _idx = 0
+        # for _t in _e.findall('text'):
+        #     if _t.text == None:
+        #         continue
+        #     _dict[_e_name][_idx] = _t.text
+        #     _idx += 1
+
+    # print(_dict)
 
 
 
