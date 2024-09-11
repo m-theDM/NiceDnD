@@ -1,7 +1,9 @@
 from nicegui import ui
 from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
     read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
-    get_spell_block
+    get_spell_block, convert_data
+from libndnddat import sizes, schoolname, spelllevels, itemtypes, damagetypes, \
+    properties
 
 @ui.refreshable
 def display_block(_dict) -> None:
@@ -44,8 +46,9 @@ def display_monster_cards(_xml) -> None:
     get_block(_xml_dat, _actions, 'action')
     get_block(_xml_dat, _traits, 'trait')
     get_block(_xml_dat, _legend, 'legendary')
+    _statblock['size'] = convert_data(sizes, _statblock['size'])
     
-    with ui.card().style('width: 300px') as stat_card:
+    with ui.card().style('width: 400px') as stat_card:
         _monster_name = ui.label(_statblock['name'])
         _monster_name.tailwind.font_size('2xl').font_weight('bold')
         _demog = ui.label("size, type, alignment, (environment)")
@@ -60,17 +63,23 @@ def display_monster_cards(_xml) -> None:
             ui.label('INT').tailwind.font_weight('extrabold').text_decoration('underline')
             ui.label('WIS').tailwind.font_weight('extrabold').text_decoration('underline')
             ui.label('CHA').tailwind.font_weight('extrabold').text_decoration('underline')
-            str_value = ui.label(_statblock['str'])
+            str_value = ui.label()
+            str_value.text = (f"{_statblock['str']} {get_stat_mod(_statblock['str'])}")
             str_value.tailwind.align_content('center')
-            dex_value = ui.label(_statblock['dex'])
+            dex_value = ui.label()
+            dex_value.text = (f"{_statblock['dex']} {get_stat_mod(_statblock['dex'])}")
             dex_value.tailwind.align_items('center')
-            con_value = ui.label(_statblock['con'])
+            con_value = ui.label()
+            con_value.text = (f"{_statblock['con']} {get_stat_mod(_statblock['con'])}")
             con_value.tailwind.align_items('center')
-            int_value = ui.label(_statblock['int'])
+            int_value = ui.label()
+            int_value.text = (f"{_statblock['int']} {get_stat_mod(_statblock['int'])}")
             int_value.tailwind.align_items('center')
-            wis_value = ui.label(_statblock['wis'])
+            wis_value = ui.label()
+            wis_value.text = (f"{_statblock['wis']} {get_stat_mod(_statblock['wis'])}")
             wis_value.tailwind.align_items('center')
-            cha_value = ui.label(_statblock['cha'])
+            cha_value = ui.label()
+            cha_value.text = (f"{_statblock['cha']} {get_stat_mod(_statblock['cha'])}")
             cha_value.tailwind.align_items('center')
         ui.separator().style('width: 100%')
         
@@ -166,6 +175,12 @@ def display_spell_cards(_xml) -> None:
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
+    _statblock['school'] = convert_data(schoolname, _statblock['school'])
+    _statblock['level'] = convert_data(spelllevels, _statblock['level'])
+    if _statblock['ritual'] == 'NO':
+        _statblock['ritual'] = ''
+    elif _statblock['ritual'] == 'YES':
+        _statblock['ritual'] = '(ritual)'
 
     with ui.card().style('width: 600px') as stat_card:
         _spell_name = ui.label(_statblock['name'])
@@ -191,13 +206,9 @@ def display_spell_cards(_xml) -> None:
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Allowed Classes: ').tailwind.font_weight('extrabold')
             _spell_class = ui.label(_statblock['classes'])
-        # _name = ui.label('Spell')
-        # _name.tailwind.font_size('2xl').font_weight('bold')
 
 @ui.refreshable
 def display_item_cards(_xml) -> None:
-    # _field_list = ['name', 'type', 'magic', 'detail', 'weight', 'ac', \
-                #    'description', 'dmg1', 'dmg2', 'dmgType']
     _field_list = ['ac', 'detail', 'dmg1', 'dmg2', 'dmgType', 'item', \
                    'magic', 'name', 'property', 'range', 'roll', 'stealth', \
                     'strength', 'text', 'type', 'value', 'weight',]
@@ -209,6 +220,10 @@ def display_item_cards(_xml) -> None:
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
+    _statblock['type'] = convert_data(itemtypes, _statblock['type'])
+    _statblock['dmgType'] = convert_data(damagetypes, _statblock['dmgType'])
+    if _statblock['magic'] == 'magic':
+            _statblock['magic'] = 'magical'
     
     with ui.card().style('width: 600px') as item_card:
         _name = ui.label(_statblock['name'])
@@ -223,7 +238,7 @@ def display_item_cards(_xml) -> None:
                     _title.text = (f"{_i.title()}")
                     _title.tailwind.font_weight('extrabold')
                     _stat = ui.label(_statblock['weight'])
-        if _statblock['dmg1'] == 'N/A' and _statblock['dmg2'] == N/A:
+        if _statblock['dmg1'] == 'N/A' and _statblock['dmg2'] == 'N/A':
                 pass
         else:
             with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
@@ -336,8 +351,7 @@ def display_feat_cards(_xml) -> None:
 
 @ui.refreshable
 def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
-    with open('Monsters/catalog.txt', 'r') as f:
-        _m_cont = f.read().splitlines()
+    _m_cont = read_catalog('Monsters/catalog.txt')
 
     _mselect = ui.select(label='Monsters',
                        options=_m_cont,
@@ -347,8 +361,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        ).classes('w-96')
     _mselect.tailwind.font_size('lg')
 
-    with open('Spells/catalog.txt', 'r') as f:
-        _s_cont = f.read().splitlines()
+    _s_cont = read_catalog('Spells/catalog.txt')
 
     _sselect = ui.select(label='Spells',
                        options=_s_cont,
@@ -358,8 +371,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        ).classes('w-96')
     _sselect.tailwind.font_size('lg')
 
-    with open('Items/catalog.txt', 'r') as f:
-        _i_cont = f.read().splitlines()
+    _i_cont = read_catalog('Items/catalog.txt')
 
     _iselect = ui.select(label='Items (unfinished)',
                        options=_i_cont,
@@ -369,8 +381,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        ).classes('w-96')
     _iselect.tailwind.font_size('lg')
 
-    with open('Classes/catalog.txt', 'r') as f:
-        _c_cont = f.read().splitlines()
+    _c_cont = read_catalog('Classes/catalog.txt')
 
     _cselect = ui.select(label='Classes (unfinished)',
                        options=_c_cont,
@@ -379,8 +390,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        clearable=True,
                        ).classes('w-96')
 
-    with open('Races/catalog.txt', 'r') as f:
-        _r_cont = f.read().splitlines()
+    _r_cont = read_catalog('Races/catalog.txt')
 
     _rselect = ui.select(label='Race',
                        options=_r_cont,
@@ -389,8 +399,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        clearable=True,
                        ).classes('w-96')
 
-    with open('Backgrounds/catalog.txt', 'r') as f:
-        _b_cont = f.read().splitlines()
+    _b_cont = read_catalog('Backgrounds/catalog.txt')
 
     _bselect = ui.select(label='Backgrounds',
                        options=_b_cont,
@@ -399,8 +408,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
                        clearable=True,
                        ).classes('w-96')
 
-    with open('Feats/catalog.txt', 'r') as f:
-        _f_cont = f.read().splitlines()
+    _f_cont = read_catalog('Feats/catalog.txt')
 
     _fselect = ui.select(label='Feats',
                        options=_f_cont,

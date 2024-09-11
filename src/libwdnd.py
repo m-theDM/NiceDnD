@@ -80,6 +80,12 @@ def create_xml_tree(_data_file):
         print(f"Error with {_data_file}: XML data file not found.")
 
 
+def read_xml(_tree, _list, _dict):
+    for _field in _list:
+        get_attribute(_tree, _field, _dict)
+    get_source(_tree, 'trait', _dict)
+
+
 def get_attribute(_tree, _attr, _dict):
     try:
         _value = _tree.find(_attr).text
@@ -97,8 +103,8 @@ def get_attribute(_tree, _attr, _dict):
                 _dict[_attr] = '(ritual)'
         elif _attr == 'magic':
             _dict[_attr] = 'magical'
-        elif _attr == 'type':
-            _dict[_attr] = convert_data(itemtypes, _value)
+        # elif _attr == 'type':
+        #     _dict[_attr] = convert_data(itemtypes, _value)
         elif _attr == 'dmgType':
             _dict[_attr] = convert_data(damagetypes, _value)
         # elif _attr == 'property':
@@ -109,12 +115,6 @@ def get_attribute(_tree, _attr, _dict):
     except:
         _dict[_attr] = 'N/A'
         print("Failed to find " + _attr + ".")
-
-
-def read_xml(_tree, _list, _dict):
-    for _field in _list:
-        get_attribute(_tree, _field, _dict)
-    get_source(_tree, 'trait', _dict)
 
 
 def convert_data(_dict, _s):
