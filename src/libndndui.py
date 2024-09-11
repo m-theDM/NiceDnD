@@ -361,7 +361,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
     with open('Items/catalog.txt', 'r') as f:
         _i_cont = f.read().splitlines()
 
-    _iselect = ui.select(label='Items',
+    _iselect = ui.select(label='Items (unfinished)',
                        options=_i_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
@@ -372,7 +372,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
     with open('Classes/catalog.txt', 'r') as f:
         _c_cont = f.read().splitlines()
 
-    _cselect = ui.select(label='Classes',
+    _cselect = ui.select(label='Classes (unfinished)',
                        options=_c_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),

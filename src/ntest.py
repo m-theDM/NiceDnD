@@ -38,12 +38,12 @@ def reset_left_drawer(_drawer) -> None:
 # end reset_left_drawer
 
 
-def show_monster() -> None:
-    demog.text = (f"{_s_dict['size']}, \
-                  {_s_dict['type']}, \
-                  {_s_dict['alignment']}, \
-                  ({_s_dict['environment']})"\
-                 )
+# def show_monster() -> None:
+#     demog.text = (f"{_s_dict['size']}, \
+#                   {_s_dict['type']}, \
+#                   {_s_dict['alignment']}, \
+#                   ({_s_dict['environment']})"\
+#                  )
 # end show_monster
 
 def on_select(_x, _drawer, _card_row) -> None:
@@ -100,8 +100,9 @@ with ui.header().classes(replace='row items-center') as header:
 #     with ui.card().style('width: 100%'):
 #         ui.label('')
 with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
-    with ui.card().style('width: 100%'):
-        ui.label('card1')
+    pass
+    # with ui.card().style('width: 100%'):
+    #     ui.label('card1')
     # with ui.card().style('width: 100%'):
     #     ui.label('card2')
     # with ui.card().style('width: 100%'):
