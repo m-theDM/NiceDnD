@@ -27,7 +27,7 @@ if not os.path.isfile(catalog):
     src_xml_tree = choose_xml()
     create_xml_dirs(src_xml_tree)
 
-contents = read_catalog(catalog)
+# contents = read_catalog(catalog)
 
 
 def reset_left_drawer(_drawer) -> None:
@@ -109,7 +109,8 @@ with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
 
 
 with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
-    populate_left_drawer(on_select, left_drawer, card_row, contents)
+    # populate_left_drawer(on_select, left_drawer, card_row, contents)
+    populate_left_drawer(on_select, left_drawer, card_row)
 
 # # The settings drawer (right_drawer) is currently hidden.
 # with ui.right_drawer().classes('bg-blue-100').props('width=450') as right_drawer:

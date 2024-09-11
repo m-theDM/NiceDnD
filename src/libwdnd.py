@@ -13,6 +13,9 @@ def read_catalog(_cat):
 
 
 def xml_split(_node, _tree, _dir):
+    _c_file = (_dir + '/' + "catalog.txt")
+    if os.path.exists(_c_file):
+        os.remove(_c_file)
 #    node = _node
     root = _tree.getroot()
 
@@ -25,7 +28,9 @@ def xml_split(_node, _tree, _dir):
         with open(_dir + '/' + _name + '.xml', 'wb') as f:
             ET.ElementTree(item).write(f)
 #        with open('catalog.txt', 'wb') as c:
-        catalog = open("catalog.txt", "a")
+
+        # catalog = open(_dir + '/' + "catalog.txt", "a")
+        catalog = open(_c_file, "a")
         catalog.write(_dir + '/' + _name + ".xml\n")
         catalog.close
 

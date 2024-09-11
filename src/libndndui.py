@@ -293,9 +293,26 @@ def display_background_cards(_xml) -> None:
 
 @ui.refreshable
 def display_class_cards(_xml) -> None:
+    _field_list = ['name', 'proficiency', 'hd']
+
+    _statblock = {}
+    _text_block = {}
+
+    _xml_dat = create_xml_tree(_xml.rstrip())
+    # get_block(_xml_dat, _text_block, 'trait')
+
+    # Added dictionaries
+    read_xml(_xml_dat, _field_list, _statblock)
+
     with ui.card().style('width: 600px') as spell_card:
-        _name = ui.label('Class')
+        _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Proficiency ').tailwind.font_weight('extrabold')
+            _bkgd_prof = ui.label(_statblock['proficiency'])
+        ui.separator().style('width: 100%')
+        # display_block(_text_block)
+        ui.separator().style('width: 100%')
 
 @ui.refreshable
 def display_feat_cards(_xml) -> None:
@@ -318,48 +335,75 @@ def display_feat_cards(_xml) -> None:
         ui.separator().style('width: 100%')
 
 @ui.refreshable
-def populate_left_drawer(_selector, _drawer, _row, _contents) -> None:
+def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
+    with open('Monsters/catalog.txt', 'r') as f:
+        _m_cont = f.read().splitlines()
+
     _mselect = ui.select(label='Monsters',
-                       options=_contents,
+                       options=_m_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _mselect.tailwind.font_size('lg')
+
+    with open('Spells/catalog.txt', 'r') as f:
+        _s_cont = f.read().splitlines()
+
     _sselect = ui.select(label='Spells',
-                       options=_contents,
+                       options=_s_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _sselect.tailwind.font_size('lg')
+
+    with open('Items/catalog.txt', 'r') as f:
+        _i_cont = f.read().splitlines()
+
     _iselect = ui.select(label='Items',
-                       options=_contents,
+                       options=_i_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
     _iselect.tailwind.font_size('lg')
+
+    with open('Classes/catalog.txt', 'r') as f:
+        _c_cont = f.read().splitlines()
+
     _cselect = ui.select(label='Classes',
-                       options=_contents,
+                       options=_c_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
+
+    with open('Races/catalog.txt', 'r') as f:
+        _r_cont = f.read().splitlines()
+
     _rselect = ui.select(label='Race',
-                       options=_contents,
+                       options=_r_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
+
+    with open('Backgrounds/catalog.txt', 'r') as f:
+        _b_cont = f.read().splitlines()
+
     _bselect = ui.select(label='Backgrounds',
-                       options=_contents,
+                       options=_b_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
                        ).classes('w-96')
+
+    with open('Feats/catalog.txt', 'r') as f:
+        _f_cont = f.read().splitlines()
+
     _fselect = ui.select(label='Feats',
-                       options=_contents,
+                       options=_f_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
