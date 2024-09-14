@@ -63,7 +63,7 @@ properties = {
     'H': 'heavy',
     'L': 'light',
     'LD': 'loading',
-    'M': 'melee',
+    'M': 'martial',
     'R': 'ranged',
     'V': 'versatile',
     ',': ','

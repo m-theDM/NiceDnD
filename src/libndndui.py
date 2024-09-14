@@ -225,22 +225,23 @@ def display_item_cards(_xml) -> None:
     read_xml(_xml_dat, _field_list, _statblock)
     _statblock['type'] = convert_data(itemtypes, _statblock['type'])
     _statblock['dmgType'] = convert_data(damagetypes, _statblock['dmgType'])
-    if _statblock['magic'] == 'magic':
+    if _statblock['magic'] == '1':
             _statblock['magic'] = 'magical'
     
     with ui.card().style('width: 600px') as item_card:
         _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
         _demog = ui.label("type, magical, rarity")
-        _demog.text = (f"{_statblock['type']} {_statblock['magic']} ({_statblock['detail']})")
+        _demog.text = (f"{_statblock['type']}, {_statblock['magic']}, {_statblock['detail']}")
         _demog.tailwind.font_style('italic')
-        for _i in ('weight', 'ac'):
-            if _statblock[_i] != 'N/A':
-                with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
-                    _title = ui.label('')
-                    _title.text = (f"{_i.title()}")
-                    _title.tailwind.font_weight('extrabold')
-                    _stat = ui.label(_statblock['weight'])
+
+        if _statblock['range'] != 'N/A':
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Range:  ")
+                _title.tailwind.font_weight('extrabold')
+                _rng = ui.label(_statblock['range'])
+
         if _statblock['dmg1'] == 'N/A' and _statblock['dmg2'] == 'N/A':
                 pass
         else:
@@ -248,15 +249,56 @@ def display_item_cards(_xml) -> None:
                 _title = ui.label('')
                 _title.text = (f"Damage:  ")
                 _title.tailwind.font_weight('extrabold')
-                if _statblock['dmg1'] != 'N/A' and _statblock['dmg2'] != 'N/A':
+                if '2H' in _statblock['property']:
                     _dmg = ui.label()
-                    _dmg.text = (f"One-handed: {_statblock['dmg1']} / Two-handed:  {_statblock['dmg2']}")
-                elif _statblock['dmg2'] == 'N/A':
+                    _dmg.text = (f"Two-handed: {_statblock['dmg1']} {_statblock['dmgType']}")
+                elif 'V' in _statblock['property']:
                     _dmg = ui.label()
-                    _dmg.text = (f"One-handed: {_statblock['dmg1']}")
-                elif _statblock['dmg1'] == 'N/A':
+                    _dmg.text = (f"One-handed: {_statblock['dmg1']} / Two-handed:  {_statblock['dmg2']} {_statblock['dmgType']}")
+                else:
                     _dmg = ui.label()
-                    _dmg.text = (f"Two-handed: {_statblock['dmg2']}")
+                    _dmg.text = (f"Two-handed: {_statblock['dmg2']} {_statblock['dmgType']}")
+
+        if _statblock['ac'] != 'N/A':
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Armor Class:  ")
+                _title.tailwind.font_weight('extrabold')
+                _stat = ui.label(_statblock['ac'])
+
+        if _statblock['property'] != 'N/A':
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Properties:  ")
+                _title.tailwind.font_weight('extrabold')
+                _l = _statblock['property']
+                _l = _l.replace('2H', 'two-handed')    
+                _l = _l.replace('LD', 'loading')    
+                _l = _l.replace('A', 'ammunition')    
+                _l = _l.replace('F', 'finesse')    
+                _l = _l.replace('H', 'heavy')    
+                _l = _l.replace('M', 'martial')    
+                _l = _l.replace('R', 'ranged')    
+                _l = _l.replace('V', 'versatile')    
+                _l = _l.replace(',', ', ')    
+                _l = _l.title()
+                _stat = ui.label(_l)
+            
+        if _statblock['value'] != 'N/A':
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Cost:  ")
+                _title.tailwind.font_weight('extrabold')
+                _stat = ui.label()
+                _stat.text = _statblock['value'] + " gp"
+
+        if _statblock['weight'] != 'N/A':
+            with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+                _title = ui.label('')
+                _title.text = (f"Weight:  ")
+                _title.tailwind.font_weight('extrabold')
+                _stat = ui.label()
+                _stat.text = _statblock['weight'] + " lbs"
 
         ui.separator().style('width: 100%')
         display_spell_block(_text_block)

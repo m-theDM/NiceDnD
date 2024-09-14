@@ -118,7 +118,7 @@ def convert_data(_dict, _s):
     try:
         return(_dict[_s])
     except:
-        print("Size not in dictionary.")
+        print(f"{_s} not in dictionary {_dict}.")
 
 
 def get_source(_tree, _type, _dict):
