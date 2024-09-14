@@ -16,20 +16,18 @@ def xml_split(_node, _tree, _dir):
     _c_file = (_dir + '/' + "catalog.txt")
     if os.path.exists(_c_file):
         os.remove(_c_file)
-#    node = _node
+
     root = _tree.getroot()
 
     for item in root.findall(_node):
         _name = item.find('name').text
         _name = _name.replace("/", "-")
-#        print(_node," --> ",_dir," --> ",_name)
+
         if not os.path.exists(_dir):
             os.makedirs(_dir)
         with open(_dir + '/' + _name + '.xml', 'wb') as f:
             ET.ElementTree(item).write(f)
-#        with open('catalog.txt', 'wb') as c:
 
-        # catalog = open(_dir + '/' + "catalog.txt", "a")
         catalog = open(_c_file, "a")
         catalog.write(_dir + '/' + _name + ".xml\n")
         catalog.close
@@ -56,7 +54,6 @@ def choose_xml():
         select_xml = input("Select the number of the source XML file:  ")
         source_xml = file_dict[select_xml]
 
-    #xml_file = file_dict[0].rstrip()
     Tree = ET.parse(source_xml)
     return(Tree)
 
@@ -90,27 +87,27 @@ def get_attribute(_tree, _attr, _dict):
     try:
         _value = _tree.find(_attr).text
 
-        if _attr == 'size':
-            _dict[_attr] = convert_data(sizes, _value)
-        elif _attr == 'school':
-            _dict[_attr] = convert_data(schoolname, _value)
-        elif _attr == 'level':
-            _dict[_attr] = convert_data(spelllevels, _value)
-        elif _attr == 'ritual':
-            if _dict[_attr] == 'NO':
-                _dict[_attr] = ''
-            elif _dict[_attr] == 'YES':
-                _dict[_attr] = '(ritual)'
-        elif _attr == 'magic':
-            _dict[_attr] = 'magical'
-        # elif _attr == 'type':
-        #     _dict[_attr] = convert_data(itemtypes, _value)
-        elif _attr == 'dmgType':
-            _dict[_attr] = convert_data(damagetypes, _value)
-        # elif _attr == 'property':
-        #     _dict[_attr] = convert_data(properties, _value)
-        else:
-            _dict[_attr] = _value
+        # if _attr == 'size':
+        #     _dict[_attr] = convert_data(sizes, _value)
+        # elif _attr == 'school':
+        #     _dict[_attr] = convert_data(schoolname, _value)
+        # elif _attr == 'level':
+        #     _dict[_attr] = convert_data(spelllevels, _value)
+        # elif _attr == 'ritual':
+        #     if _dict[_attr] == 'NO':
+        #         _dict[_attr] = ''
+        #     elif _dict[_attr] == 'YES':
+        #         _dict[_attr] = '(ritual)'
+        # elif _attr == 'magic':
+        #     _dict[_attr] = 'magical'
+        # # elif _attr == 'type':
+        # #     _dict[_attr] = convert_data(itemtypes, _value)
+        # elif _attr == 'dmgType':
+        #     _dict[_attr] = convert_data(damagetypes, _value)
+        # # elif _attr == 'property':
+        # #     _dict[_attr] = convert_data(properties, _value)
+        # else:
+        _dict[_attr] = _value
         print(_attr + " : " + _dict[_attr])
     except:
         _dict[_attr] = 'N/A'

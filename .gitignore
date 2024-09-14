@@ -15,3 +15,4 @@ Monsters
 Races
 Spells
 *.xml
+src/__pycache__

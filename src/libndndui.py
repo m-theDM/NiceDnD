@@ -198,8 +198,11 @@ def display_spell_cards(_xml) -> None:
             ui.label('Components: ').tailwind.font_weight('extrabold')
             _spell_comp = ui.label(_statblock['components'])
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
-            ui.label('Duration: ').tailwind.font_weight('extrabold')
+            ui.label('Casting Time: ').tailwind.font_weight('extrabold')
             _spell_time = ui.label(_statblock['time'])
+        with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
+            ui.label('Duration: ').tailwind.font_weight('extrabold')
+            _spell_time = ui.label(_statblock['duration'])
         ui.separator().style('width: 100%')
         display_spell_block(_text_block)
         ui.separator().style('width: 100%')

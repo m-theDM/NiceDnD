@@ -10,22 +10,13 @@ from nicegui import ui
 import xml.etree.ElementTree as ET
 import os
 
-catalog = 'catalog.txt'
-#XML=['Monsters/Night Hag.xml', 'Monsters/Worg.xml']
-# field_list = ['name', 'size', 'type', 'alignment', 'ac', 'hp', 'speed', 'save',\
-#               'skill', 'resist', 'vulnerable', 'immune', 'conditionImmune', \
-#               'senses', 'passive', 'languages', 'cr', 'environment', 'str', \
-#               'dex', 'con', 'wis', 'int', 'cha']
-# statblock = {}
-# actions = {}
-# traits = {}
-# legend = {}
-#
+version = '1.1'
+# catalog = 'catalog.txt'
 
-if not os.path.isfile(catalog):
-    print("No catalog file found.")
-    src_xml_tree = choose_xml()
-    create_xml_dirs(src_xml_tree)
+# if not os.path.isfile(catalog):
+#     print("No catalog file found.")
+#     src_xml_tree = choose_xml()
+#     create_xml_dirs(src_xml_tree)
 
 # contents = read_catalog(catalog)
 
@@ -47,7 +38,6 @@ def reset_left_drawer(_drawer) -> None:
 # end show_monster
 
 def on_select(_x, _drawer, _card_row) -> None:
-#    _welcome.set_visibility(False)
     _drawer.toggle()
     _card_row.clear()
     _y = _x.split('/')[0]
@@ -55,7 +45,6 @@ def on_select(_x, _drawer, _card_row) -> None:
 
     if _y == 'Monsters':
         with _card_row:
-            #display_monster_cards(_x, statblock, traits, actions, legend, field_list)
             display_monster_cards(_x)
             display_monster_cards.refresh()
     elif _y == 'Spells':
@@ -91,7 +80,8 @@ with ui.header().classes(replace='row items-center') as header:
     home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
     # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
     title = ui.label('NiceD&D 5E Codex').classes('left').tailwind.font_size('2xl').font_weight('extrabold')
-    
+    version = ui.label().classes('right').tailwind.font_size('lg')
+    version.text = (f"Ver. {version}")
 
 
 # with ui.row(wrap=False, align_items='stretch').style('width: 100%') as card_row:
