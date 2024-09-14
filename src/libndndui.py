@@ -257,7 +257,7 @@ def display_item_cards(_xml) -> None:
                     _dmg.text = (f"One-handed: {_statblock['dmg1']} / Two-handed:  {_statblock['dmg2']} {_statblock['dmgType']}")
                 else:
                     _dmg = ui.label()
-                    _dmg.text = (f"Two-handed: {_statblock['dmg2']} {_statblock['dmgType']}")
+                    _dmg.text = (f"One-handed: {_statblock['dmg1']} {_statblock['dmgType']}")
 
         if _statblock['ac'] != 'N/A':
             with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
@@ -280,6 +280,7 @@ def display_item_cards(_xml) -> None:
                 _l = _l.replace('L', 'light')    
                 _l = _l.replace('M', 'martial')    
                 _l = _l.replace('R', 'ranged')    
+                _l = _l.replace('T', 'thrown')    
                 _l = _l.replace('V', 'versatile')    
                 _l = _l.replace(',', ', ')    
                 _l = _l.title()
