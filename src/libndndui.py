@@ -277,6 +277,7 @@ def display_item_cards(_xml) -> None:
                 _l = _l.replace('A', 'ammunition')    
                 _l = _l.replace('F', 'finesse')    
                 _l = _l.replace('H', 'heavy')    
+                _l = _l.replace('L', 'light')    
                 _l = _l.replace('M', 'martial')    
                 _l = _l.replace('R', 'ranged')    
                 _l = _l.replace('V', 'versatile')    
