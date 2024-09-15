@@ -13,6 +13,7 @@ def read_catalog(_cat):
 
 
 def build_catalogs():
+    print('Building category catalogs ...')
     _categories = ["monster","item","class","race","spell","background","feat"]
 
     _tree = choose_xml()
@@ -98,7 +99,7 @@ def get_attribute(_tree, _attr, _dict):
         _value = _tree.find(_attr).text
 
         _dict[_attr] = _value
-        print(_attr + " : " + _dict[_attr])
+        # print(_attr + " : " + _dict[_attr])
     except:
         _dict[_attr] = 'N/A'
         print("Failed to find " + _attr + ".")

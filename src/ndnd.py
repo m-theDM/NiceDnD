@@ -11,9 +11,9 @@ from nicegui import ui
 import xml.etree.ElementTree as ET
 import os
 
-version = '1.1'
+app_version = '1.1'
 
-# ui.page(title='NiceD&D')
+ui.page_title('NiceD&D - A 5e D&D Codex')
 
 build_catalogs()
 
@@ -65,8 +65,9 @@ with ui.header().classes(replace='row items-center') as header:
     home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
     # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
     title = ui.label('NiceD&D 5E Codex').classes('left').tailwind.font_size('2xl').font_weight('extrabold')
-    version = ui.label().classes('right').tailwind.font_size('lg')
-    version.text = (f"Ver. {version}")
+    version = ui.label()#.classes('vertical-top')
+    version.tailwind.font_weight('light')
+    version.text = (f"Ver. {app_version}")
 
 
 with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
@@ -76,7 +77,7 @@ with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
 with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
     populate_left_drawer(on_select, left_drawer, card_row)
 
-# # The settings drawer (right_drawer) is currently hidden.
+# The settings drawer (right_drawer) is currently hidden.
 # with ui.right_drawer().classes('bg-blue-100').props('width=450') as right_drawer:
 #     populate_right_drawer()
 

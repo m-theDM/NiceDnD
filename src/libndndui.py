@@ -464,6 +464,10 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
 
 @ui.refreshable
 def populate_right_drawer() -> None:
+    dark = ui.dark_mode()
+    ui.label('Switch Dark/Light mode:')
+    ui.button('Dark', on_click=dark.enable)
+    ui.button('Light', on_click=dark.disable)
     ui.select(label='XML File',
               options=['XML File'],
               with_input=True,
