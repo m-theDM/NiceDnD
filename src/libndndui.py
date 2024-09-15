@@ -426,7 +426,7 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
 
     _i_cont = read_catalog('Items/catalog.txt')
 
-    _iselect = ui.select(label='Items (unfinished)',
+    _iselect = ui.select(label='Items',
                        options=_i_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
