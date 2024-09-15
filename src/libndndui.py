@@ -429,7 +429,8 @@ def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
     _c_cont = read_catalog('Classes/catalog.txt')
 
     _cselect = ui.select(label='Classes (unfinished)',
-                       options=_c_cont,
+                        options=['This feature not available'],
+                    #    options=_c_cont,
                        with_input=True,
                        on_change=lambda e: _selector(e.value, _drawer, _row),
                        clearable=True,
