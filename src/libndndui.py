@@ -326,8 +326,11 @@ def display_race_cards(_xml) -> None:
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Proficiency ').tailwind.font_weight('extrabold')
             _bkgd_prof = ui.label(_statblock['proficiency'])
+
         ui.separator().style('width: 100%')
+
         display_block(_text_block)
+
         ui.separator().style('width: 100%')
 
 @ui.refreshable
@@ -349,8 +352,11 @@ def display_background_cards(_xml) -> None:
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Proficiency ').tailwind.font_weight('extrabold')
             _bkgd_prof = ui.label(_statblock['proficiency'])
+
         ui.separator().style('width: 100%')
+
         display_block(_text_block)
+
         ui.separator().style('width: 100%')
 
 @ui.refreshable
