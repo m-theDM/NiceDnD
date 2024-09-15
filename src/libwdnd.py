@@ -12,6 +12,16 @@ def read_catalog(_cat):
         return(_c)
 
 
+def build_catalogs():
+    _categories = ["monster","item","class","race","spell","background","feat"]
+
+    _tree = choose_xml()
+
+    for _cat in _categories:
+        _dir = select_dir(_cat)
+        xml_split(_cat, _tree, _dir)
+
+
 def xml_split(_node, _tree, _dir):
     _c_file = (_dir + '/' + "catalog.txt")
     if os.path.exists(_c_file):
@@ -87,26 +97,6 @@ def get_attribute(_tree, _attr, _dict):
     try:
         _value = _tree.find(_attr).text
 
-        # if _attr == 'size':
-        #     _dict[_attr] = convert_data(sizes, _value)
-        # elif _attr == 'school':
-        #     _dict[_attr] = convert_data(schoolname, _value)
-        # elif _attr == 'level':
-        #     _dict[_attr] = convert_data(spelllevels, _value)
-        # elif _attr == 'ritual':
-        #     if _dict[_attr] == 'NO':
-        #         _dict[_attr] = ''
-        #     elif _dict[_attr] == 'YES':
-        #         _dict[_attr] = '(ritual)'
-        # elif _attr == 'magic':
-        #     _dict[_attr] = 'magical'
-        # # elif _attr == 'type':
-        # #     _dict[_attr] = convert_data(itemtypes, _value)
-        # elif _attr == 'dmgType':
-        #     _dict[_attr] = convert_data(damagetypes, _value)
-        # # elif _attr == 'property':
-        # #     _dict[_attr] = convert_data(properties, _value)
-        # else:
         _dict[_attr] = _value
         print(_attr + " : " + _dict[_attr])
     except:
@@ -141,11 +131,10 @@ def get_block(_tree, _dict, _attr):
         for _t in _e.findall('text'):
             if _t.text == None:
                 continue
-#            print(_t.text)
+            
             _dict[_e_name][_idx] = _t.text
             _idx += 1
 
-#    print(str(len(actions)) + " actions")
     print(_dict)
 
 
@@ -189,30 +178,6 @@ def get_stat_mod(_stat):
     return _stat_mod
 
 
-# @ui.refreshable
-# def action_data(_dict) -> None:
-#     for _x in _dict:
-#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-#         for _y in _dict[_x]:
-#             ui.label(_dict[_x][_y])
-
-
-# @ui.refreshable
-# def trait_data(_dict) -> None:
-#     for _x in _dict:
-#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-#         for _y in _dict[_x]:
-#             ui.label(_dict[_x][_y])
-
-
-# @ui.refreshable
-# def legend_data(_dict) -> None:
-#     for _x in _dict:
-#         ui.label(_x).tailwind.font_weight('extrabold').text_decoration('underline')
-#         for _y in _dict[_x]:
-#             ui.label(_dict[_x][_y])
-
-
 def select_dir(_node):
     if _node == "monster":
         _dir = "Monsters"
@@ -250,35 +215,6 @@ def get_item_block(_tree, _dict, _attr):
     for _e in _tree.findall(_attr):
         _dict[_idx] = _e.text
         _idx += 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # _e_name = _e.find('name').text
-        # if _attr == 'trait' and _e_name == 'Source':
-        #     continue
-
-        # _dict[_e_name] = {}
-
-        # _idx = 0
-        # for _t in _e.findall('text'):
-        #     if _t.text == None:
-        #         continue
-        #     _dict[_e_name][_idx] = _t.text
-        #     _idx += 1
-
-    # print(_dict)
-
 
 
 '''

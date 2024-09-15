@@ -21,9 +21,6 @@ def display_spell_block(_dict) -> None:
 
 @ui.refreshable
 def display_monster_cards(_xml) -> None:
-                          #, _s_dict, _t_dict, _a_dict, _l_dict, _f_list) -> None:
-    # Do I need to have statblock, traits, actions, and legend as globals or can
-    # define them here?
     _field_list = ['name', 'size', 'type', 'alignment', 'ac', 'hp', 'speed', 'save',\
               'skill', 'resist', 'vulnerable', 'immune', 'conditionImmune', \
               'senses', 'passive', 'languages', 'cr', 'environment', 'str', \
@@ -32,11 +29,6 @@ def display_monster_cards(_xml) -> None:
     _actions = {}
     _traits = {}
     _legend = {}
-
-        # clear trait, action, and legend dictionaries
-    # _t_dict.clear()
-    # _a_dict.clear()
-    # _l_dict.clear()
 
     # read the monster xml file into an Elementree tree
     _xml_dat = create_xml_tree(_xml.rstrip())
