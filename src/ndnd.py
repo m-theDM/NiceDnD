@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from libndndui import display_monster_cards, display_background_cards, \
+from libndndui import on_select, display_monster_cards, display_background_cards, \
     display_spell_cards, display_race_cards, display_class_cards, \
     display_feat_cards, display_item_cards, populate_left_drawer, \
     populate_right_drawer
@@ -21,7 +21,34 @@ def reset_left_drawer(_drawer) -> None:
     with _drawer:
         populate_left_drawer.refresh()
 
+    
+with ui.header().classes(replace='row items-center') as header:
+    home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
+    # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
+    title = ui.label('NiceD&D 5E Codex').classes('left').tailwind.font_size('2xl').font_weight('extrabold')
+    version = ui.label()#.classes('vertical-top')
+    version.tailwind.font_weight('light')
+    version.text = (f"Ver. {app_version}")
 
+
+with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
+    pass
+
+
+with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
+    populate_left_drawer(on_select, left_drawer, card_row)
+
+# The settings drawer (right_drawer) is currently hidden.
+# with ui.right_drawer().classes('bg-blue-100').props('width=450') as right_drawer:
+#     populate_right_drawer()
+
+# settings_button.set_visibility(False)
+# right_drawer.set_visibility(False)
+
+ui.run()
+
+
+'''
 def on_select(_x, _drawer, _card_row) -> None:
     _drawer.toggle()
     _card_row.clear()
@@ -59,32 +86,8 @@ def on_select(_x, _drawer, _card_row) -> None:
     _card_row.update()
     reset_left_drawer(_drawer)
 # end on_select
+'''
 
-    
-with ui.header().classes(replace='row items-center') as header:
-    home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
-    # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
-    title = ui.label('NiceD&D 5E Codex').classes('left').tailwind.font_size('2xl').font_weight('extrabold')
-    version = ui.label()#.classes('vertical-top')
-    version.tailwind.font_weight('light')
-    version.text = (f"Ver. {app_version}")
-
-
-with ui.grid(columns=('auto auto auto auto')).classes('w-full') as card_row:
-    pass
-
-
-with ui.left_drawer().classes('bg-blue-100').props('width=450') as left_drawer:
-    populate_left_drawer(on_select, left_drawer, card_row)
-
-# The settings drawer (right_drawer) is currently hidden.
-# with ui.right_drawer().classes('bg-blue-100').props('width=450') as right_drawer:
-#     populate_right_drawer()
-
-# settings_button.set_visibility(False)
-# right_drawer.set_visibility(False)
-
-ui.run()
 
 
 '''

@@ -1,7 +1,6 @@
 from nicegui import ui
 from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
-    read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
-    get_spell_block, convert_data
+    read_catalog, get_spell_block, convert_data
 from libndnddat import sizes, schoolname, spelllevels, itemtypes, damagetypes, \
     properties
 
@@ -478,6 +477,45 @@ def populate_right_drawer() -> None:
 
 def select_xml():
     pass
+
+
+def on_select(_x, _drawer, _card_row) -> None:
+    _drawer.toggle()
+    _card_row.clear()
+    _y = _x.split('/')[0]
+    print(_y)
+
+    if _y == 'Monsters':
+        with _card_row:
+            display_monster_cards(_x)
+            display_monster_cards.refresh()
+    elif _y == 'Spells':
+        with _card_row:
+            display_spell_cards(_x)
+            display_spell_cards.refresh()
+    elif _y == 'Items':
+        with _card_row:
+            display_item_cards(_x)
+            display_item_cards.refresh()
+    elif _y == 'Races':
+        with _card_row:
+            display_race_cards(_x)
+            display_race_cards.refresh()
+    elif _y == 'Backgrounds':
+        with _card_row:
+            display_background_cards(_x)
+            display_background_cards.refresh()
+    elif _y == 'Classes':
+        with _card_row:
+            display_class_cards(_x)
+            display_class_cards.refresh()
+    elif _y == 'Feats':
+        with _card_row:
+            display_feat_cards(_x)
+            display_feat_cards.refresh()
+    _card_row.update()
+    reset_left_drawer(_drawer)
+# end on_select
 
 '''
 def on_select(_type, _welcome, _drawer, _card_row) -> None:
