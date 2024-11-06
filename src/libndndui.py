@@ -38,7 +38,7 @@ def display_monster_cards(_xml) -> None:
     get_block(_xml_dat, _traits, 'trait')
     get_block(_xml_dat, _legend, 'legendary')
     _statblock['size'] = convert_data(sizes, _statblock['size'])
-    
+
     with ui.card().style('width: 400px') as stat_card:
         _monster_name = ui.label(_statblock['name'])
         _monster_name.tailwind.font_size('2xl').font_weight('bold')
@@ -73,7 +73,7 @@ def display_monster_cards(_xml) -> None:
             cha_value.text = (f"{_statblock['cha']} {get_stat_mod(_statblock['cha'])}")
             cha_value.tailwind.align_items('center')
         ui.separator().style('width: 100%')
-        
+
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Armor Class: ').tailwind.font_weight('extrabold')
             armor_class = ui.label(_statblock['ac'])
@@ -218,7 +218,7 @@ def display_item_cards(_xml) -> None:
     _statblock['dmgType'] = convert_data(damagetypes, _statblock['dmgType'])
     if _statblock['magic'] == '1':
             _statblock['magic'] = 'magical'
-    
+
     with ui.card().style('width: 600px') as item_card:
         _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
@@ -263,20 +263,20 @@ def display_item_cards(_xml) -> None:
                 _title.text = (f"Properties:  ")
                 _title.tailwind.font_weight('extrabold')
                 _l = _statblock['property']
-                _l = _l.replace('2H', 'two-handed')    
-                _l = _l.replace('LD', 'loading')    
-                _l = _l.replace('A', 'ammunition')    
-                _l = _l.replace('F', 'finesse')    
-                _l = _l.replace('H', 'heavy')    
-                _l = _l.replace('L', 'light')    
-                _l = _l.replace('M', 'martial')    
-                _l = _l.replace('R', 'ranged')    
-                _l = _l.replace('T', 'thrown')    
-                _l = _l.replace('V', 'versatile')    
-                _l = _l.replace(',', ', ')    
+                _l = _l.replace('2H', 'two-handed')
+                _l = _l.replace('LD', 'loading')
+                _l = _l.replace('A', 'ammunition')
+                _l = _l.replace('F', 'finesse')
+                _l = _l.replace('H', 'heavy')
+                _l = _l.replace('L', 'light')
+                _l = _l.replace('M', 'martial')
+                _l = _l.replace('R', 'ranged')
+                _l = _l.replace('T', 'thrown')
+                _l = _l.replace('V', 'versatile')
+                _l = _l.replace(',', ', ')
                 _l = _l.title()
                 _stat = ui.label(_l)
-            
+
         if _statblock['value'] != 'N/A':
             with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
                 _title = ui.label('')
@@ -301,7 +301,7 @@ def display_item_cards(_xml) -> None:
 def display_race_cards(_xml) -> None:
     _field_list = ['ability', 'name', 'proficiency', 'size', \
                    'special', 'speed', 'spellAbility', 'text', 'trait']
-    
+
     _statblock = {}
     _text_block = {}
 
@@ -336,7 +336,7 @@ def display_background_cards(_xml) -> None:
 
     # Added dictionaries
     read_xml(_xml_dat, _field_list, _statblock)
-    
+
     with ui.card().style('width: 600px') as bkgd_card:
         _name = ui.label(_statblock['name'])
         _name.tailwind.font_size('2xl').font_weight('bold')
@@ -392,6 +392,10 @@ def display_feat_cards(_xml) -> None:
         ui.separator().style('width: 100%')
         display_spell_block(_text_block)
         ui.separator().style('width: 100%')
+
+def reset_left_drawer(_drawer) -> None:
+    with _drawer:
+        populate_left_drawer.refresh()
 
 @ui.refreshable
 def populate_left_drawer(_selector, _drawer, _row, _contents='') -> None:
