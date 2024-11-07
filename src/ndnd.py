@@ -2,11 +2,11 @@
 from libndndui import on_select, display_monster_cards, display_background_cards, \
     display_spell_cards, display_race_cards, display_class_cards, \
     display_feat_cards, display_item_cards, populate_left_drawer, \
-    populate_right_drawer
+    populate_right_drawer, reset_left_drawer
 from libwdnd import create_xml_tree, read_xml, get_block, get_stat_mod, \
     read_catalog, select_dir, xml_split, choose_xml, create_xml_dirs, \
     build_catalogs
-    
+
 from nicegui import ui
 import xml.etree.ElementTree as ET
 import os
@@ -17,11 +17,13 @@ ui.page_title('NiceD&D - A 5e D&D Codex')
 
 build_catalogs()
 
+'''
 def reset_left_drawer(_drawer) -> None:
     with _drawer:
         populate_left_drawer.refresh()
+'''
 
-    
+
 with ui.header().classes(replace='row items-center') as header:
     home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
     # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
@@ -403,7 +405,7 @@ def display_monster_cards() -> None:
         ui.label('Legendary Action Card')
         ui.label('This is where the text goes that explains the legendary actions of the monster.  This could be a very large section')
 '''
-    
+
 '''
 with ui.card().style('width: 400px') as stat_card:
         spell_name = ui.label('Spell')
@@ -486,7 +488,7 @@ with ui.card().style('width: 400px') as stat_card:
         with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
             ui.label('Passive Perception:').tailwind.font_weight('extrabold')
             pass_perc = ui.label('')
-''' 
+'''
 '''
 def display_spell_cards() -> None:
     with ui.card().style('width: 400px') as spell_card:
