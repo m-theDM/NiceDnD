@@ -17,13 +17,6 @@ ui.page_title('NiceD&D - A 5e D&D Codex')
 
 build_catalogs()
 
-'''
-def reset_left_drawer(_drawer) -> None:
-    with _drawer:
-        populate_left_drawer.refresh()
-'''
-
-
 with ui.header().classes(replace='row items-center') as header:
     home_button = ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
     # settings_button = ui.button(on_click=lambda: right_drawer.toggle(), icon='settings').props('flat color=white').classes('absolute-right')
@@ -562,4 +555,10 @@ def clear_screen() -> None:
     #         spelld_tab.set_visibility(False)
     #         itemd_tab = ui.tab('Items')
     #         itemd_tab.set_visibility(False)
+'''
+
+'''
+def reset_left_drawer(_drawer) -> None:
+    with _drawer:
+        populate_left_drawer.refresh()
 '''
