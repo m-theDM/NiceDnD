@@ -285,7 +285,7 @@ def display_item_cards(_xml) -> None:
                 _stat = ui.label()
                 _stat.text = _statblock['value'] + " gp"
 
-        if _statblock['weight'] != 'N/A':
+        if _statblock['weight'] != 'N/A' and _statblock['weight'] != None:
             with ui.row(wrap=False, align_items='stretch').style('width: 100%'):
                 _title = ui.label('')
                 _title.text = (f"Weight:  ")
@@ -520,6 +520,10 @@ def on_select(_x, _drawer, _card_row) -> None:
     _card_row.update()
     reset_left_drawer(_drawer)
 # end on_select
+
+def reset_left_drawer(_drawer) -> None:
+    with _drawer:
+        populate_left_drawer.refresh()
 
 '''
 def on_select(_type, _welcome, _drawer, _card_row) -> None:

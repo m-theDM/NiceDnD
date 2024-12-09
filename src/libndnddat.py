@@ -53,7 +53,8 @@ itemtypes = {
 damagetypes = {
     "B": "bludgeoning",
     "P": "piercing",
-    "S": "slashing"
+    "S": "slashing",
+    "N/A": "N/A"
 }
 
 properties = {
